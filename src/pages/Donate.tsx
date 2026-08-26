@@ -82,9 +82,11 @@ export default function Donate() {
               <p style={{ fontSize: 12.5, color: 'var(--slate)', marginTop: 18, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                 <IconLock size={14} style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: 2 }} />
                 <span>
-                  <strong style={{ color: 'var(--ink)' }}>We will never email you asking you to change these
-                  details.</strong> Fraudsters do impersonate charities. If you receive a message claiming our
-                  bank account has changed, it did not come from us. Telephone us before sending anything.
+                  <strong style={{ color: 'var(--ink)' }}>These details will never change by email.</strong>{' '}
+                  Fraudsters impersonate charities, usually by copying a real appeal and substituting their own
+                  account. The details above are the only ones we publish. If a message tells you they have
+                  changed, it did not come from us: check this page again before sending anything, and tell us
+                  at <a href="mailto:info@muftdevelopmentfoundation.org.uk">info@muftdevelopmentfoundation.org.uk</a>.
                 </span>
               </p>
             </div>

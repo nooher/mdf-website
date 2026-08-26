@@ -1,0 +1,12 @@
+# Security contact for muftdevelopmentfoundation.org.uk
+# Muft Development Foundation, registered charity 1218194 (England & Wales)
+
+Contact: mailto:info@muftdevelopmentfoundation.org.uk
+Preferred-Languages: en
+Canonical: https://muftdevelopmentfoundation.org.uk/.well-known/security.txt
+
+# If you believe you have found a vulnerability in this website, or you have
+# received an email claiming to be from this charity that asks you to send
+# money to a different bank account, please write to the address above.
+# Our bank details are published only on https://muftdevelopmentfoundation.org.uk/donate
+# and we will never ask a donor to change them.
