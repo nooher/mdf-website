@@ -204,15 +204,17 @@ export const TRUSTEES: Trustee[] = [
   },
 ]
 
-// Social channels — set the `url` once MDF confirms each handle; empty = not
-// shown as a live link. Also feeds the footer, contact page, and SEO sameAs.
+// Social channels. URLs are stored without the share-tracking parameters the
+// apps append when you copy a link (igsh, _t, si) — those identify whoever
+// copied it and do not belong on a public page. Keep this list in sync with
+// the sameAs array in index.html.
 export type Social = { name: string; url: string }
 export const SOCIALS: Social[] = [
-  { name: 'Facebook', url: '' },
-  { name: 'Instagram', url: '' },
-  { name: 'X', url: '' },
-  { name: 'LinkedIn', url: '' },
-  { name: 'WhatsApp', url: '' },
+  { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61593026826306' },
+  { name: 'Instagram', url: 'https://www.instagram.com/muft_development_foundation_uk' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/company/muft-development-foundation-uk' },
+  { name: 'TikTok', url: 'https://www.tiktok.com/@muft_development' },
+  { name: 'YouTube', url: 'https://www.youtube.com/@muftdevelopmentfoundationuk' },
 ]
 export const ACTIVE_SOCIALS = SOCIALS.filter(s => s.url.trim().length > 0)
 

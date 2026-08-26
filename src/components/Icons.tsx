@@ -146,6 +146,14 @@ export function IconWhatsApp({ size }: P) {
   return <svg {...fill(size)}><path d="M12 3a8.9 8.9 0 0 0-7.6 13.6L3 21l4.5-1.3A8.9 8.9 0 1 0 12 3Zm0 16a7 7 0 0 1-3.6-1l-.3-.2-2.7.7.7-2.6-.2-.3A7 7 0 1 1 12 19Zm3.9-5.2c-.2-.1-1.3-.6-1.5-.7-.2-.1-.3-.1-.5.1-.1.2-.5.7-.6.8-.1.1-.2.2-.4.1a5.7 5.7 0 0 1-2.8-2.5c-.2-.4.2-.3.5-1 .1-.1 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.7.7-.9 1.7-.2 2.9a9 9 0 0 0 3.4 3c2 .9 2 .6 2.4.6.4 0 1.3-.5 1.5-1 .2-.6.2-1 .1-1.1 0-.1-.2-.2-.4-.3Z" /></svg>
 }
 
+export function IconTikTok({ size }: P) {
+  return <svg {...fill(size)}><path d="M16.6 3h-2.7v12.5a2.4 2.4 0 1 1-2.4-2.4c.2 0 .5 0 .7.1v-2.8a5.2 5.2 0 1 0 4.4 5.1V9a6.4 6.4 0 0 0 3.6 1.1V7.4a3.7 3.7 0 0 1-3.6-3.7V3Z" /></svg>
+}
+export function IconYouTube({ size }: P) {
+  return <svg {...fill(size)}><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15.1V8.9l5.2 3.1L10 15.1Z" /></svg>
+}
+
 export const SOCIAL_ICON: Record<string, (p: P) => JSX.Element> = {
-  Facebook: IconFacebook, Instagram: IconInstagram, X: IconX, LinkedIn: IconLinkedIn, WhatsApp: IconWhatsApp,
+  Facebook: IconFacebook, Instagram: IconInstagram, LinkedIn: IconLinkedIn,
+  TikTok: IconTikTok, YouTube: IconYouTube, X: IconX, WhatsApp: IconWhatsApp,
 }

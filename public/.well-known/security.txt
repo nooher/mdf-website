@@ -2,6 +2,7 @@
 # Muft Development Foundation, registered charity 1218194 (England & Wales)
 
 Contact: mailto:info@muftdevelopmentfoundation.org.uk
+Expires: 2027-08-26T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://muftdevelopmentfoundation.org.uk/.well-known/security.txt
 
