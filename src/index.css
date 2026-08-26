@@ -1,0 +1,191 @@
+/* ── Muft Development Foundation — design system ─────────────────────────── */
+:root {
+  --emerald:   #1B5E20;
+  --emerald-d: #123A18;
+  --emerald-dd:#0E2C12;
+  --gold:      #C9A84C;   /* bright — display + large text on dark backgrounds */
+  --gold-d:    #816218;   /* WCAG-AA on white/ivory — for small gold text */
+  --gold-lt:   #E4C674;   /* WCAG-AA small gold text ON emerald (4.6:1) */
+  --ivory:     #FAF8F3;
+  --ivory-d:   #F1ECE0;
+  --charcoal:  #2E2E2E;
+  --ink:       #23271F;
+  --slate:     #5C5F57;
+  --hair:      #E6DFCE;
+  --white:     #ffffff;
+
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans:  "Jost", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --wrap: 1140px;
+  --radius: 14px;
+  --shadow: 0 18px 50px -24px rgba(18, 58, 24, 0.30);
+  --shadow-sm: 0 8px 24px -14px rgba(18, 58, 24, 0.28);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--white);
+  font-size: 16.5px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.12; color: var(--emerald); margin: 0; letter-spacing: 0.2px; }
+h1 { font-size: clamp(2.4rem, 5vw, 3.9rem); }
+h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
+h3 { font-size: 1.35rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--emerald); text-decoration: none; transition: color .18s, opacity .18s; }
+a:hover { color: var(--gold-d); }
+img { max-width: 100%; display: block; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+.eyebrow {
+  font-family: var(--sans); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold-d);
+}
+.lead { font-size: 1.18rem; color: var(--slate); }
+.center { text-align: center; }
+.section { padding: 92px 0; }
+.section.tight { padding: 64px 0; }
+.section.ivory { background: var(--ivory); }
+.section.emerald { background: var(--emerald); color: #EAF0E7; }
+.section.emerald h1, .section.emerald h2, .section.emerald h3 { color: #fff; }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--sans); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.02em;
+  padding: 13px 26px; border-radius: 999px; border: 1.5px solid transparent;
+  transition: transform .16s, box-shadow .2s, background .2s, color .2s, border-color .2s;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled, .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+.btn-gold { background: var(--gold); color: #3a2f0d; box-shadow: 0 10px 24px -12px rgba(201,168,76,.7); }
+.btn-gold:hover { background: #d6b761; color: #3a2f0d; }
+.btn-emerald { background: var(--emerald); color: #fff; }
+.btn-emerald:hover { background: var(--emerald-d); color: #fff; }
+.btn-ghost { background: transparent; border-color: currentColor; color: inherit; }
+.btn-ghost:hover { background: rgba(255,255,255,.08); }
+.btn-outline { background: transparent; border-color: var(--emerald); color: var(--emerald); }
+.btn-outline:hover { background: var(--emerald); color: #fff; }
+
+/* chips / tags */
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 999px; background: rgba(27,94,32,.07); color: var(--emerald);
+  border: 1px solid var(--hair);
+}
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+
+/* cards */
+.card {
+  background: var(--white); border: 1px solid var(--hair); border-radius: var(--radius);
+  padding: 28px; box-shadow: var(--shadow-sm);
+}
+a.card { transition: transform .2s ease, box-shadow .24s ease, border-color .24s ease; }
+a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--gold); }
+
+a.social-link:hover { background: var(--emerald); color: #fff; border-color: var(--emerald); }
+footer a.social-link:hover { background: var(--gold); color: var(--emerald-dd); border-color: var(--gold); }
+
+/* ── visible keyboard focus (WCAG 2.4.7) ── */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, .btn:focus-visible, .chip:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--gold-d); outline-offset: 2px; border-radius: 6px;
+}
+/* on emerald/dark surfaces, use the light gold so the ring stays visible */
+.emerald :focus-visible, footer :focus-visible, .on-emerald :focus-visible {
+  outline-color: var(--gold-lt);
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: none; border-color: var(--emerald);
+  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.14);
+}
+
+/* skip link */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--emerald); color: #fff; padding: 10px 16px; border-radius: 0 0 8px 0;
+  font-weight: 600; font-size: 14px; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+
+/* prose readability cap (66–75ch) */
+.prose { max-width: 68ch; }
+.prose p { max-width: 68ch; }
+
+/* fixed 2-up amount grid on mobile (donation widget must never be 1-wide) */
+.amount-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.grid { display: grid; gap: 22px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+
+/* generic two-column page layouts (main content + sidebar/photo) — always
+   collapse to a single column below tablet width, whatever ratio the page sets. */
+.split-grid { display: grid; }
+.sticky-aside { position: sticky; }
+@media (max-width: 820px) {
+  .split-grid { grid-template-columns: 1fr !important; }
+  .sticky-aside { position: static !important; }
+}
+
+.divider { width: 66px; height: 3px; background: var(--gold); border: none; border-radius: 2px; margin: 18px 0; }
+.divider.center { margin: 18px auto; }
+
+/* fade-in on load */
+.reveal { opacity: 0; transform: translateY(16px); animation: rise .7s ease forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* scroll-triggered reveal (IntersectionObserver adds .is-in) */
+.reveal-in { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal-in.is-in { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  .g4 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .section { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+  .g4 { grid-template-columns: 1fr; }
+  .amount-grid { grid-template-columns: repeat(2, 1fr); } /* 2×2, never 1-wide */
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-in { animation: none; opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ── bank details (Donate page, home "how to give") ── */
+.bank-details { margin: 20px 0; border-top: 1px solid var(--hair); }
+.bank-row {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 1fr) minmax(0, 1.4fr) auto;
+  gap: 12px; align-items: center;
+  padding: 11px 0; border-bottom: 1px solid var(--hair);
+}
+.bank-label {
+  font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--slate); font-weight: 600;
+}
+.bank-value { font-weight: 600; color: var(--ink); word-break: break-word; }
+.bank-value.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .04em; }
+.bank-copy {
+  border: 1px solid var(--hair); background: #fff; cursor: pointer;
+  border-radius: 999px; padding: 5px 13px; font-size: .78rem;
+  font-family: var(--sans); color: var(--slate); transition: .18s ease;
+}
+.bank-copy:hover { border-color: var(--emerald); color: var(--emerald); }
+@media (max-width: 640px) {
+  .bank-row { grid-template-columns: 1fr auto; }
+  .bank-label { grid-column: 1 / -1; padding-bottom: 2px; }
+}
