@@ -41,33 +41,55 @@ appear" at the end.
 
 ## Who owns what
 
-The site depends on four accounts. At handover each should belong to MDF, not to
+The site depends on five accounts. At handover each should belong to MDF, not to
 an individual.
 
-| Thing | What it does | Check |
+| Account | What it does | Why it matters |
 |---|---|---|
-| GitHub repository | Holds the site's source and every story | Should be owned by an MDF organisation, not a personal account |
-| Vercel project `mdf` | Builds and serves the site | Should be in an MDF team; the domain is attached here |
-| Domain registrar | Owns muftdevelopmentfoundation.org.uk | Should be an MDF account |
-| Google Workspace | The charity's email | Separate from the above; see the warning on DNS |
+| **Domain registrar** | Owns the name muftdevelopmentfoundation.org.uk | Delegates the name to Cloudflare, and does nothing else |
+| **Cloudflare** | Answers all DNS for the domain | Holds the website records and the email records together |
+| **GitHub** | The site's source and every story | Publishing rights are repository access |
+| **Vercel** | Builds and serves the site | The custom domain is attached to the project here |
+| **Google Workspace** | The charity's email | The MX records in Cloudflare point to it |
 
-**Do not change DNS or MX records** while moving anything. The domain's email and
-the website use the same DNS. Moving the Vercel project between accounts carries
-the domain with it and does not require DNS changes.
+### How the domain actually works
+
+```
+Registrar  - holds the name, delegates it to:
+Cloudflare - answers every DNS query for the domain:
+               A / CNAME  send the website to Vercel
+               MX         send email to Google Workspace
+               TXT        SPF, DKIM and DMARC for that email
+Vercel     - builds and serves the site. It does NOT hold this domain's DNS.
+```
+
+Cloudflare is the account that matters most: losing it loses the website **and**
+the charity's email at the same time. Vercel could be replaced in an afternoon.
+
+**Do not change the MX, SPF, DKIM or DMARC records.** They are the charity's
+email. Nothing in this handover requires touching them: moving the Vercel project
+does not change DNS, because Vercel does not host this domain's DNS. If Vercel
+asks you to verify the domain it will ask for a **TXT** record, which is unrelated
+to MX and safe to add.
 
 ### Transfer checklist
 
-1. Create a GitHub organisation for MDF. Add trustees who will publish, and the
-   person looking after the technical side as an owner.
-2. In the repository: **Settings → General → Transfer ownership** to that
-   organisation.
-3. In `public/admin/config.yml`, change `repo:` to the new `owner/name`, commit.
-4. In the GitHub OAuth App (below), update the callback URL if the domain changes.
-   If it does not change, nothing to do.
-5. In Vercel: **Project → Settings → General → Transfer project** to the MDF team.
-   Check afterwards that muftdevelopmentfoundation.org.uk still resolves.
-6. Re-add the two environment variables (below) if the transfer did not carry them.
-7. Turn on two-factor authentication for the GitHub organisation and the Vercel team.
+1. MDF creates a **GitHub organisation** and a **Vercel account**, and adds the
+   current owner to both so the transfers are possible.
+2. GitHub: **Settings → General → Transfer ownership** to the MDF organisation.
+   Branches, pull requests and history all move, and the old links redirect.
+3. Vercel: **Project → Settings → General → Transfer project** to MDF's account.
+   Afterwards check that muftdevelopmentfoundation.org.uk still loads; if Vercel
+   asks for domain verification, add the TXT record it names in Cloudflare.
+4. Cloudflare: invite MDF as **Super Administrator** on the account holding the
+   domain, or transfer the zone, then remove the previous owner.
+5. Registrar: move the domain to an MDF account.
+6. Set up the GitHub OAuth App and the two environment variables (next section).
+7. Turn on two-factor authentication for the GitHub organisation and the Vercel
+   account, then remove the previous owner from both.
+
+The editor's `repo:` setting does **not** need editing after the move. The build
+takes it from the deployment, so it follows the repository automatically.
 
 ---
 
@@ -75,7 +97,8 @@ the domain with it and does not require DNS changes.
 
 The editor signs people in with their own GitHub account. That needs a GitHub
 OAuth App and two environment variables. **Until these are set, /admin will load
-but sign-in will fail.**
+but sign-in will fail.** Create the OAuth App inside the MDF organisation, so that
+MDF owns it rather than an individual.
 
 1. GitHub → the MDF organisation → **Settings → Developer settings → OAuth Apps
    → New OAuth App**
@@ -108,14 +131,16 @@ GitHub → repository → **Settings → Rules → Rulesets → New branch rules
 - Target branch: `main`
 - **Require a pull request before merging**
 - **Require review from Code Owners**
-- Under **Bypass list**, add the organisation's admin role so routine news
-  publishing is not blocked — or leave it empty and switch the editor to review
-  mode instead (see below).
 
-If you would rather every story was reviewed before it goes live, change
-`publish_mode: simple` to `publish_mode: editorial_workflow` in
-`public/admin/config.yml`. Stories then arrive as pull requests for someone to
-approve.
+> **One trap, and it will bite you.** The editor commits straight to `main`. The
+> moment you require pull requests from everyone, publishing a story starts
+> failing. Do one of these two things at the same time, not neither:
+>
+> - add the organisation's admin role to the ruleset's **Bypass list**, so
+>   trustees keep publishing in one click; or
+> - change `publish_mode: simple` to `publish_mode: editorial_workflow` in
+>   `public/admin/config.yml`, so every story arrives as a pull request for
+>   someone to approve before it goes live.
 
 Bank details change only when MDF publishes a change on the site. Any email or
 message claiming the account has changed should be treated as fraud.
@@ -142,7 +167,9 @@ npm run preview    # serves the built site
   in git.
 - `scripts/content.mjs` is the single list of routes. `scripts/prerender.mjs`
   prerenders each one to static HTML and writes `dist/sitemap.xml` from the same
-  list, so the two can never disagree.
+  list, so the two can never disagree. It also fails the build, by name, if two
+  stories would publish at the same URL, and rewrites the editor's `repo:` to
+  whichever repository the deployment was built from.
 - Everything else — charity details, programmes, trustees, FAQs — is in
   `src/data.ts`.
 
@@ -157,7 +184,9 @@ npm run update-cms
 ```
 
 Then review the diff and commit. `public/admin/index.html` and
-`public/admin/config.yml` are ours and are never overwritten.
+`public/admin/config.yml` are ours and are never overwritten. Note the package
+name: `decap-cms` is the browser build and is the one we want; `decap-cms-app` is
+the one for bundlers and fails when loaded directly from a script tag.
 
 ### Security headers
 

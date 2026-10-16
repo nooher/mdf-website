@@ -1,7 +1,8 @@
 # Settings for the editor at /admin. Decap CMS reads this file in the browser.
 #
-# AFTER THE REPOSITORY MOVES to the MDF organisation, change `repo:` below to the
-# new owner/name — nothing else here needs to change.
+# `repo:` below is only the value used when running locally. On Vercel the build
+# overwrites it with the repository the deployment was actually built from, so
+# moving this repository to another owner needs no edit here.
 
 backend:
   name: github

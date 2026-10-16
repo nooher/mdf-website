@@ -5,7 +5,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { allRoutes, buildSitemap, root } from './content.mjs'
+import { allRoutes, buildSitemap, repoFromEnv, root } from './content.mjs'
 
 const distDir = path.join(root, 'dist')
 const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js')
@@ -42,6 +42,23 @@ for (const route of allRoutes()) {
 }
 
 fs.writeFileSync(path.join(distDir, 'sitemap.xml'), buildSitemap())
+
+// Point the editor at whichever repository this deployment was built from, so the
+// site keeps working after the repository moves to another owner without anyone
+// having to remember to edit public/admin/config.yml.
+const repo = repoFromEnv()
+const cfgPath = path.join(distDir, 'admin', 'config.yml')
+if (repo && fs.existsSync(cfgPath)) {
+  const cfg = fs.readFileSync(cfgPath, 'utf8')
+  const updated = cfg
+    .split('\n')
+    .map(line => (line.trimStart().startsWith('repo:') ? `${line.slice(0, line.indexOf('repo:'))}repo: ${repo}` : line))
+    .join('\n')
+  if (updated !== cfg) {
+    fs.writeFileSync(cfgPath, updated)
+    console.log(`Editor will commit to ${repo}.`)
+  }
+}
 
 fs.rmSync(path.join(root, 'dist-ssr'), { recursive: true, force: true })
 

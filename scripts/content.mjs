@@ -48,7 +48,7 @@ function formatDate(iso) {
 
 export function loadNews() {
   if (!fs.existsSync(newsDir)) return []
-  return fs.readdirSync(newsDir)
+  const posts = fs.readdirSync(newsDir)
     .filter(f => f.toLowerCase().endsWith('.md'))
     .map(file => {
       const raw = fs.readFileSync(path.join(newsDir, file), 'utf8')
@@ -68,6 +68,21 @@ export function loadNews() {
       }
     })
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+
+  // Two posts sharing a slug would silently shadow each other, and one of the two
+  // URLs would show the wrong story. Fail the build instead.
+  const seen = new Map()
+  for (const p of posts) {
+    if (seen.has(p.slug)) {
+      throw new Error(
+        `Two news posts would both publish at /news/${p.slug}: "${seen.get(p.slug)}" and "${p.title}". ` +
+        'Rename one of the files in content/news/, or give one a different slug in its front matter.',
+      )
+    }
+    seen.set(p.slug, p.title)
+  }
+
+  return posts
 }
 
 export function allRoutes() {
@@ -110,4 +125,11 @@ export function buildSitemap() {
 ${urls.join('\n')}
 </urlset>
 `
+}
+
+/** The owner/name the editor commits to. Vercel supplies it; otherwise null. */
+export function repoFromEnv() {
+  const owner = process.env.VERCEL_GIT_REPO_OWNER
+  const slug = process.env.VERCEL_GIT_REPO_SLUG
+  return owner && slug ? `${owner}/${slug}` : null
 }
