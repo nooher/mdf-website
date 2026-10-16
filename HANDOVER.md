@@ -97,29 +97,26 @@ takes it from the deployment, so it follows the repository automatically.
 
 ### Moving the DNS
 
-Which path applies depends on one question: **does that Cloudflare account hold
-only this domain, or other domains too?**
+The Cloudflare account that serves this domain holds **this domain and nothing
+else**. That makes this the easy case, and none of the DNS records have to move:
 
-**Only this domain.** Change the account's email to an MDF address, or invite MDF
-as Super Administrator and remove the previous owner. Nothing in DNS changes, and
-there is no window where anything can break.
+1. Cloudflare → **Manage account → Members**: invite an MDF address as **Super
+   Administrator**. (Changing the account's email to an MDF address works too.)
+2. MDF accept, confirm they can see the domain and its DNS records.
+3. Remove the previous owner from the members list.
 
-**Other domains too.** Do **not** add MDF as Super Administrator — that would give
-them every other domain in the account. Move the zone instead:
+Nothing in DNS changes, the nameservers stay as they are, and there is no window
+in which the website or the email can break.
 
-1. In the current Cloudflare account: **DNS → Records → Export** the zone file.
-2. MDF add the domain to their own Cloudflare account and **import** that file.
-3. **Compare the MX, SPF, DKIM and DMARC records line by line against the export
-   before going any further.** This is the step that loses the charity's email if
-   it is wrong. Everything else here is recoverable; this is not, quickly.
-4. Only then, at the registrar, change the nameservers to the ones MDF's
-   Cloudflare account gives.
-5. Wait for propagation. Because both accounts serve identical records, a correct
-   move has no outage.
-6. Once mail and the website are confirmed working on the new nameservers, remove
-   the zone from the old account.
+**If another domain is ever added to that Cloudflare account, this stops being
+true** — inviting someone would then hand them that domain as well. In that case
+export the zone file, import it into a separate Cloudflare account, compare the MX,
+SPF, DKIM and DMARC records line by line against the export, and only then change
+the nameservers at the registrar.
 
 The registrar account moves separately, by whatever process that registrar uses.
+Before starting, confirm who holds it — it is not necessarily the same person or
+the same email as Cloudflare.
 
 ### Where the previous owner still appears
 
