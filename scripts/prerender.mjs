@@ -54,10 +54,10 @@ if (repo && fs.existsSync(cfgPath)) {
     .split('\n')
     .map(line => (line.trimStart().startsWith('repo:') ? `${line.slice(0, line.indexOf('repo:'))}repo: ${repo}` : line))
     .join('\n')
-  if (updated !== cfg) {
-    fs.writeFileSync(cfgPath, updated)
-    console.log(`Editor will commit to ${repo}.`)
-  }
+  if (updated !== cfg) fs.writeFileSync(cfgPath, updated)
+  // Said on every build, changed or not, so the build log always records which
+  // repository the editor was pointed at.
+  console.log(`Editor will commit to ${repo}.`)
 }
 
 fs.rmSync(path.join(root, 'dist-ssr'), { recursive: true, force: true })
