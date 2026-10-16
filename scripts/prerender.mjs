@@ -1,33 +1,14 @@
-// Prerenders every route to static HTML using the SSR bundle built from src/entry-server.tsx.
+// Prerenders every route to static HTML using the SSR bundle built from src/entry-server.tsx,
+// then writes the sitemap. Routes come from scripts/content.mjs, so a news post added in
+// content/news/ is prerendered and listed in the sitemap without anyone editing this file.
 // Run after `vite build` (client) and `vite build --ssr` (server) have both completed.
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { pathToFileURL } from 'node:url'
+import { allRoutes, buildSitemap, root } from './content.mjs'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const root = path.resolve(__dirname, '..')
 const distDir = path.join(root, 'dist')
 const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js')
-
-const ROUTES = [
-  '/',
-  '/about',
-  '/our-work',
-  '/our-work/poverty-relief',
-  '/our-work/education',
-  '/our-work/youth-development',
-  '/our-work/islamic-education',
-  '/donate',
-  '/grants',
-  '/news',
-  '/faq',
-  '/contact',
-  '/legal/privacy',
-  '/legal/cookies',
-  '/legal/safeguarding',
-  '/legal/terms',
-  '/legal/accessibility',
-]
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8')
 const { render } = await import(pathToFileURL(ssrEntry).href)
@@ -41,7 +22,7 @@ function headTagsFromHelmet(helmet) {
 }
 
 let count = 0
-for (const route of ROUTES) {
+for (const route of allRoutes()) {
   const { html, helmet } = render(route)
   const headTags = headTagsFromHelmet(helmet)
 
@@ -60,6 +41,8 @@ for (const route of ROUTES) {
   count++
 }
 
+fs.writeFileSync(path.join(distDir, 'sitemap.xml'), buildSitemap())
+
 fs.rmSync(path.join(root, 'dist-ssr'), { recursive: true, force: true })
 
-console.log(`Prerendered ${count} routes.`)
+console.log(`Prerendered ${count} routes. Sitemap written.`)

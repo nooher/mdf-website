@@ -12,6 +12,7 @@ import Programme from './pages/Programme'
 import Donate from './pages/Donate'
 import Grants from './pages/Grants'
 import News from './pages/News'
+import NewsPost from './pages/NewsPost'
 import Contact from './pages/Contact'
 import Faq from './pages/Faq'
 import Legal from './pages/Legal'
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/donate" element={<Donate />} />
           <Route path="/grants" element={<Grants />} />
           <Route path="/news" element={<News />} />
+          <Route path="/news/:slug" element={<NewsPost />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal/:page" element={<Legal />} />

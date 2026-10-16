@@ -1,0 +1,82 @@
+# Settings for the editor at /admin. Decap CMS reads this file in the browser.
+#
+# AFTER THE REPOSITORY MOVES to the MDF organisation, change `repo:` below to the
+# new owner/name — nothing else here needs to change.
+
+backend:
+  name: github
+  repo: nooher/mdf-website
+  branch: main
+  # Where the sign-in helper lives (api/oauth/* in this same project).
+  base_url: https://muftdevelopmentfoundation.org.uk
+  auth_endpoint: api/oauth/authorize
+  commit_messages:
+    create: 'News: add "{{slug}}"'
+    update: 'News: update "{{slug}}"'
+    delete: 'News: remove "{{slug}}"'
+    uploadMedia: 'News: upload {{path}}'
+    deleteMedia: 'News: remove {{path}}'
+
+# Saving publishes straight away. To add a review step instead, change this to
+# `editorial_workflow` — each story then becomes a pull request for someone to approve.
+publish_mode: simple
+
+media_folder: public/uploads
+public_folder: /uploads
+
+locale: en
+
+collections:
+  - name: news
+    label: News & stories
+    label_singular: Story
+    description: >-
+      Updates and activity reports. Only publish what has actually happened —
+      no fundraising totals or results we cannot evidence.
+    folder: content/news
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{dateLabel}} — {{title}}'
+    sortable_fields: [date, title]
+    view_filters: []
+    fields:
+      - label: Title
+        name: title
+        widget: string
+        hint: The headline. Keep it plain.
+
+      - label: Date
+        name: date
+        widget: datetime
+        date_format: 'DD MMMM YYYY'
+        time_format: false
+        format: 'YYYY-MM-DD'
+        picker_utc: true
+        hint: Used to order the stories and for the sitemap.
+
+      - label: Shown date (optional)
+        name: dateLabel
+        widget: string
+        required: false
+        hint: >-
+          Leave empty and the date above is shown. Fill it in only when you do not
+          want to give an exact day, e.g. "May 2026".
+
+      - label: Summary
+        name: summary
+        widget: text
+        hint: One or two sentences. Shown on the news list and by Google.
+
+      - label: Image
+        name: image
+        widget: image
+        required: false
+        allow_multiple: false
+        hint: Optional. Shown at the top of the story. Do not upload photographs of children without written consent.
+
+      - label: Story
+        name: body
+        widget: markdown
+        hint: The full story. Headings, bold, links and lists all work.

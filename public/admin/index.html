@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>MDF — site editor</title>
+    <link rel="icon" type="image/png" href="/emblem.png" />
+    <!-- Decap reads its settings from this file. -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Served from our own domain, not a CDN, so the site's Content-Security-Policy
+         can keep script-src locked to 'self'. Update it with: npm run update-cms -->
+    <script src="/admin/decap-cms-app.js"></script>
+  </body>
+</html>

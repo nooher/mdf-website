@@ -4,3 +4,7 @@ dist-ssr
 .DS_Store
 *.local
 .vercel
+
+# generated from content/news by scripts/build-content.mjs
+src/content/news.generated.ts
+.tmp-decap

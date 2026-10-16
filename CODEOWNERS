@@ -1,0 +1,17 @@
+# Files here decide where donations go, how the site is deployed, and what the
+# build does. A change to any of them needs a second pair of eyes.
+#
+# For this to be enforced rather than advisory, the repository needs a ruleset on
+# `main` with "Require a pull request before merging" plus "Require review from
+# Code Owners". See HANDOVER.md.
+
+# Bank details, charity registration details, trustees.
+/src/data.ts            @nooher
+
+# Deployment, security headers, sign-in helper, build scripts.
+/vercel.json            @nooher
+/api/                   @nooher
+/scripts/               @nooher
+/package.json           @nooher
+/package-lock.json      @nooher
+/CODEOWNERS             @nooher
