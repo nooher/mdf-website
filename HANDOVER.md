@@ -81,15 +81,57 @@ to MX and safe to add.
 3. Vercel: **Project → Settings → General → Transfer project** to MDF's account.
    Afterwards check that muftdevelopmentfoundation.org.uk still loads; if Vercel
    asks for domain verification, add the TXT record it names in Cloudflare.
-4. Cloudflare: invite MDF as **Super Administrator** on the account holding the
-   domain, or transfer the zone, then remove the previous owner.
-5. Registrar: move the domain to an MDF account.
-6. Set up the GitHub OAuth App and the two environment variables (next section).
-7. Turn on two-factor authentication for the GitHub organisation and the Vercel
-   account, then remove the previous owner from both.
+4. Cloudflare and the registrar: see "Moving the DNS" below — it is the one step
+   that can take the charity's email down, so it is not a one-liner.
+5. Set up the GitHub OAuth App and the two environment variables (next section).
+6. Turn on two-factor authentication for the GitHub organisation and the Vercel
+   account.
+7. Remove the previous owner from GitHub, Vercel, Cloudflare and the registrar.
+
+GitHub and Vercel have no "accept ownership" action: the current owner has to be
+present to press Transfer. That is the only reason they appear in this list, and
+it is a few minutes, not an ongoing role.
 
 The editor's `repo:` setting does **not** need editing after the move. The build
 takes it from the deployment, so it follows the repository automatically.
+
+### Moving the DNS
+
+Which path applies depends on one question: **does that Cloudflare account hold
+only this domain, or other domains too?**
+
+**Only this domain.** Change the account's email to an MDF address, or invite MDF
+as Super Administrator and remove the previous owner. Nothing in DNS changes, and
+there is no window where anything can break.
+
+**Other domains too.** Do **not** add MDF as Super Administrator — that would give
+them every other domain in the account. Move the zone instead:
+
+1. In the current Cloudflare account: **DNS → Records → Export** the zone file.
+2. MDF add the domain to their own Cloudflare account and **import** that file.
+3. **Compare the MX, SPF, DKIM and DMARC records line by line against the export
+   before going any further.** This is the step that loses the charity's email if
+   it is wrong. Everything else here is recoverable; this is not, quickly.
+4. Only then, at the registrar, change the nameservers to the ones MDF's
+   Cloudflare account gives.
+5. Wait for propagation. Because both accounts serve identical records, a correct
+   move has no outage.
+6. Once mail and the website are confirmed working on the new nameservers, remove
+   the zone from the old account.
+
+The registrar account moves separately, by whatever process that registrar uses.
+
+### Where the previous owner still appears
+
+After step 7 the answer should be nowhere. Worth checking each of these, because
+each one is a way back in that outlives a handover:
+
+- GitHub: organisation members, and any personal access tokens or deploy keys.
+- Vercel: team members.
+- Cloudflare: account members, and API tokens.
+- Registrar: account contacts.
+- The GitHub OAuth App: it must live in the MDF organisation, not on a personal
+  account, or sign-in to `/admin` depends on someone who has left.
 
 ---
 
