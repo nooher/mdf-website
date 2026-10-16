@@ -40,7 +40,6 @@ collections:
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
     summary: '{{dateLabel}} — {{title}}'
     sortable_fields: [date, title]
-    view_filters: []
     fields:
       - label: Title
         name: title
