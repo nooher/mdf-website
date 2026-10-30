@@ -1,11 +1,15 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
 import Reveal from '../components/Reveal'
 import { DonateButton } from '../components/ui'
-import { IconShield, IconEducation, IconLeaf } from '../components/Icons'
+import { IconShield, IconEducation, IconLeaf, IconYouth } from '../components/Icons'
 import { PageMeta } from '../PageMeta'
 
-const POSTS = [
+type Post = { title: string; date: string; excerpt: string; icon: (p: { size?: number }) => JSX.Element; tint: string; to?: string }
+
+const POSTS: Post[] = [
+  { title: 'Youth Leadership Conference 2026: registration is open', date: 'October 2026', excerpt: 'Saturday 28 November at London Central Mosque. A free one-day conference for youth, parents and supporters, open to all faiths and backgrounds.', icon: IconYouth, tint: 'rgba(27,94,32,.06)', to: '/events/youth-leadership-conference-2026' },
   { title: 'Muft Development Foundation is now a registered UK charity', date: '22 May 2026', excerpt: 'Registration with the Charity Commission for England and Wales came through under number 1218194, which means the Foundation can now receive donations and is answerable for what it does with them.', icon: IconShield, tint: 'var(--ivory-d)' },
   { title: 'Our four programmes: how we make a difference', date: 'May 2026', excerpt: 'Poverty relief, education, youth development and Islamic education. What each one covers in practice, and what it does not.', icon: IconEducation, tint: 'rgba(27,94,32,.06)' },
   { title: 'How to give, and what happens next', date: 'May 2026', excerpt: 'Bank transfer, standing order, Zakat, or a larger gift. How each one reaches us and how it gets recorded.', icon: IconLeaf, tint: 'rgba(201,168,76,.10)' },
@@ -63,6 +67,7 @@ export default function News() {
                   <div className="eyebrow" style={{ marginBottom: 8 }}>{p.date}</div>
                   <h3 style={{ fontSize: 19 }}>{p.title}</h3>
                   <p style={{ color: 'var(--slate)', fontSize: 14.5, marginTop: 8, flex: 1 }}>{p.excerpt}</p>
+                  {p.to && <Link to={p.to} style={{ color: 'var(--gold-d)', fontWeight: 600, fontSize: 14, marginTop: 4 }}>Read more and register →</Link>}
                 </Reveal>
               )
             })}

@@ -1,4 +1,5 @@
-// Prerenders every route to static HTML using the SSR bundle built from src/entry-server.tsx.
+// Prerenders every route to static HTML using the SSR bundle built from src/entry-server.tsx,
+// then writes sitemap.xml from the same route list.
 // Run after `vite build` (client) and `vite build --ssr` (server) have both completed.
 import fs from 'node:fs'
 import path from 'node:path'
@@ -9,28 +10,32 @@ const root = path.resolve(__dirname, '..')
 const distDir = path.join(root, 'dist')
 const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js')
 
+// Fixed routes and their sitemap priority. Event pages are added from the
+// content files below, so publishing an event needs no change here.
 const ROUTES = [
-  '/',
-  '/about',
-  '/our-work',
-  '/our-work/poverty-relief',
-  '/our-work/education',
-  '/our-work/youth-development',
-  '/our-work/islamic-education',
-  '/donate',
-  '/grants',
-  '/news',
-  '/faq',
-  '/contact',
-  '/legal/privacy',
-  '/legal/cookies',
-  '/legal/safeguarding',
-  '/legal/terms',
-  '/legal/accessibility',
+  ['/', '1.0'],
+  ['/about', '0.8'],
+  ['/our-work', '0.8'],
+  ['/our-work/poverty-relief', '0.6'],
+  ['/our-work/education', '0.6'],
+  ['/our-work/youth-development', '0.6'],
+  ['/our-work/islamic-education', '0.6'],
+  ['/donate', '0.9'],
+  ['/grants', '0.7'],
+  ['/events', '0.8'],
+  ['/news', '0.6'],
+  ['/faq', '0.6'],
+  ['/contact', '0.7'],
+  ['/legal/privacy', '0.3'],
+  ['/legal/cookies', '0.3'],
+  ['/legal/safeguarding', '0.3'],
+  ['/legal/terms', '0.3'],
+  ['/legal/accessibility', '0.3'],
 ]
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8')
-const { render } = await import(pathToFileURL(ssrEntry).href)
+const { render, EVENTS } = await import(pathToFileURL(ssrEntry).href)
+const routes = [...ROUTES, ...EVENTS.map(e => [`/events/${e.slug}`, '0.7'])]
 
 function headTagsFromHelmet(helmet) {
   return [
@@ -41,7 +46,7 @@ function headTagsFromHelmet(helmet) {
 }
 
 let count = 0
-for (const route of ROUTES) {
+for (const [route] of routes) {
   const { html, helmet } = render(route)
   const headTags = headTagsFromHelmet(helmet)
 
@@ -59,6 +64,16 @@ for (const route of ROUTES) {
   fs.writeFileSync(outPath, page)
   count++
 }
+
+const SITE = 'https://muftdevelopmentfoundation.org.uk'
+const sitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...routes.map(([route, priority]) => `  <url><loc>${SITE}${route}</loc><priority>${priority}</priority></url>`),
+  '</urlset>',
+  '',
+].join('\n')
+fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemap)
 
 fs.rmSync(path.join(root, 'dist-ssr'), { recursive: true, force: true })
 

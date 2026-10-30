@@ -2,9 +2,13 @@ import { Link } from 'react-router-dom'
 import { PROGRAMMES, VALUES, AT_A_GLANCE, CHARITY, BANK } from '../data'
 import { SectionHeading, TrustBar, DonateButton } from '../components/ui'
 import { PROGRAMME_ICON } from '../components/Icons'
+import { RegisterButton } from '../components/EventCard'
+import { upcomingEvents, formatDate, formatTimes, useNow } from '../events'
 import { PageMeta } from '../PageMeta'
 
 export default function Home() {
+  const now = useNow()
+  const next = upcomingEvents(now)[0]
   return (
     <>
       <PageMeta description="Muft Development Foundation is a charity registered in England and Wales (no. 1218194). We work on poverty, education, young people and Islamic learning, in the UK and overseas." />
@@ -27,6 +31,29 @@ export default function Home() {
           <div className="reveal" style={{ marginTop: 34, animationDelay: '.2s' }}><TrustBar /></div>
         </div>
       </section>
+
+      {/* ── Next event (only while one is coming up) ── */}
+      {next && (
+        <section style={{ background: 'var(--white)', borderTop: '1px solid var(--hair)', borderBottom: '1px solid var(--hair)' }}>
+          <div className="wrap" style={{ padding: '30px 24px', display: 'flex', gap: 24, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+            <div style={{ minWidth: 0, flex: '1 1 420px' }}>
+              <div className="eyebrow" style={{ marginBottom: 6 }}>
+                Upcoming event · {formatDate(next.start)}{formatTimes(next) && ` · ${formatTimes(next)}`}
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2rem)' }}>
+                <Link to={`/events/${next.slug}`}>{next.title}</Link>
+              </h2>
+              <p style={{ color: 'var(--slate)', margin: '6px 0 0', fontSize: 15 }}>
+                {next.venue}{next.price && ` · ${next.price}`}
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <RegisterButton e={next} now={now} />
+              <Link to={`/events/${next.slug}`} className="btn btn-outline">Event details</Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Impact numbers ── */}
       <section className="section emerald tight">

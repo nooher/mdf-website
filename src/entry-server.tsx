@@ -3,6 +3,8 @@ import { StaticRouter } from 'react-router-dom/server'
 import { HelmetProvider, type HelmetServerState } from 'react-helmet-async'
 import App from './App'
 
+export { EVENTS } from './events'
+
 export function render(url: string) {
   const helmetContext: { helmet?: HelmetServerState } = {}
   const html = ReactDOMServer.renderToString(

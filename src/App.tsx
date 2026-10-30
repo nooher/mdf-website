@@ -12,6 +12,8 @@ import Programme from './pages/Programme'
 import Donate from './pages/Donate'
 import Grants from './pages/Grants'
 import News from './pages/News'
+import Events from './pages/Events'
+import EventDetail from './pages/EventDetail'
 import Contact from './pages/Contact'
 import Faq from './pages/Faq'
 import Legal from './pages/Legal'
@@ -37,6 +39,8 @@ export default function App() {
           <Route path="/our-work/:slug" element={<Programme />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/grants" element={<Grants />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:slug" element={<EventDetail />} />
           <Route path="/news" element={<News />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/contact" element={<Contact />} />

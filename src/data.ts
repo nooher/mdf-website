@@ -34,6 +34,7 @@ export const NAV = [
   { label: 'About', to: '/about' },
   { label: 'Our Work', to: '/our-work' },
   { label: 'Grants', to: '/grants' },
+  { label: 'Events', to: '/events' },
   { label: 'News', to: '/news' },
   { label: 'FAQ', to: '/faq' },
   { label: 'Contact', to: '/contact' },
