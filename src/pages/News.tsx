@@ -3,17 +3,8 @@ import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
 import Reveal from '../components/Reveal'
 import { DonateButton } from '../components/ui'
-import { IconShield, IconEducation, IconLeaf, IconYouth } from '../components/Icons'
+import { NEWS, formatNewsDate } from '../news'
 import { PageMeta } from '../PageMeta'
-
-type Post = { title: string; date: string; excerpt: string; icon: (p: { size?: number }) => JSX.Element; tint: string; to?: string }
-
-const POSTS: Post[] = [
-  { title: 'Youth Leadership Conference 2026: registration is open', date: 'October 2026', excerpt: 'Saturday 28 November at London Central Mosque. A free one-day conference for youth, parents and supporters, open to all faiths and backgrounds.', icon: IconYouth, tint: 'rgba(27,94,32,.06)', to: '/events/youth-leadership-conference-2026' },
-  { title: 'Muft Development Foundation is now a registered UK charity', date: '22 May 2026', excerpt: 'Registration with the Charity Commission for England and Wales came through under number 1218194, which means the Foundation can now receive donations and is answerable for what it does with them.', icon: IconShield, tint: 'var(--ivory-d)' },
-  { title: 'Our four programmes: how we make a difference', date: 'May 2026', excerpt: 'Poverty relief, education, youth development and Islamic education. What each one covers in practice, and what it does not.', icon: IconEducation, tint: 'rgba(27,94,32,.06)' },
-  { title: 'How to give, and what happens next', date: 'May 2026', excerpt: 'Bank transfer, standing order, Zakat, or a larger gift. How each one reaches us and how it gets recorded.', icon: IconLeaf, tint: 'rgba(201,168,76,.10)' },
-]
 
 const NEWSLETTER_ENDPOINT = 'https://formsubmit.co/ajax/info@muftdevelopmentfoundation.org.uk'
 
@@ -39,38 +30,35 @@ export default function News() {
 
   return (
     <>
-      <PageMeta title="News & Impact" description="Updates from Muft Development Foundation. We are new, and this page will fill up as the work does." />
+      <PageMeta title="News & Impact" description="News, announcements and event updates from Muft Development Foundation, a registered UK charity." />
       <PageHero eyebrow="News & Impact" title="Stories & updates"
-        sub="An honest page. There is not much here yet, and we would rather leave it thin than pad it out." />
+        sub="Announcements, events, and reports on the work as it happens. We only post what has actually happened." />
 
       <section className="section">
         <div className="wrap">
           <div className="card" style={{ background: 'var(--ivory)', marginBottom: 26, borderColor: 'var(--hair)' }}>
-            <strong style={{ color: 'var(--emerald)', fontFamily: 'var(--serif)', fontSize: 20 }}>Nothing has happened yet.</strong>
+            <strong style={{ color: 'var(--emerald)', fontFamily: 'var(--serif)', fontSize: 20 }}>What you will find here</strong>
             <p style={{ color: 'var(--slate)', margin: '8px 0 0' }}>
-              We registered in May 2026. When the first project is funded and delivered, the report on it will
-              appear here, including what it cost and what it did not achieve. Leave your email if you want to
-              read that when it comes.
+              When a project is funded and delivered, the report on it appears here, including what it cost
+              and what it did not achieve. Conferences and gatherings are listed under{' '}
+              <Link to="/events">Events</Link>. Leave your email below to hear when something new is posted.
             </p>
           </div>
 
           <div className="grid g3">
-            {POSTS.map((p, i) => {
-              const Icon = p.icon
-              return (
-                <Reveal key={p.title} as="article" delay={i * 40} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ height: 150, borderRadius: 10, background: p.tint, marginBottom: 18, display: 'grid', placeItems: 'center', border: '1px solid var(--hair)' }}>
-                    <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--white)', color: 'var(--emerald)', display: 'grid', placeItems: 'center', boxShadow: 'var(--shadow-sm)' }}>
-                      <Icon size={26} />
-                    </div>
-                  </div>
-                  <div className="eyebrow" style={{ marginBottom: 8 }}>{p.date}</div>
-                  <h3 style={{ fontSize: 19 }}>{p.title}</h3>
-                  <p style={{ color: 'var(--slate)', fontSize: 14.5, marginTop: 8, flex: 1 }}>{p.excerpt}</p>
-                  {p.to && <Link to={p.to} style={{ color: 'var(--gold-d)', fontWeight: 600, fontSize: 14, marginTop: 4 }}>Read more and register →</Link>}
-                </Reveal>
-              )
-            })}
+            {NEWS.map((p, i) => (
+              <Reveal key={p.slug} as="article" delay={i * 40} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <Link to={`/news/${p.slug}`} tabIndex={-1} aria-hidden style={{ display: 'block', height: 150, borderRadius: 10, marginBottom: 18, overflow: 'hidden', border: '1px solid var(--hair)', background: 'var(--ivory)' }}>
+                  {p.image
+                    ? <img src={p.image} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                    : <img src="/emblem.png" alt="" width={44} height={60} style={{ height: 60, width: 'auto', margin: '45px auto 0', opacity: .55 }} />}
+                </Link>
+                <div className="eyebrow" style={{ marginBottom: 8 }}>{formatNewsDate(p.date)}</div>
+                <h3 style={{ fontSize: 19 }}><Link to={`/news/${p.slug}`}>{p.title}</Link></h3>
+                <p style={{ color: 'var(--slate)', fontSize: 14.5, marginTop: 8, flex: 1 }}>{p.summary}</p>
+                <Link to={`/news/${p.slug}`} style={{ color: 'var(--gold-d)', fontWeight: 600, fontSize: 14, marginTop: 4 }}>Read more →</Link>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
