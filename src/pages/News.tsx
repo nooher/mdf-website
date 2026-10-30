@@ -30,18 +30,18 @@ export default function News() {
 
   return (
     <>
-      <PageMeta title="News & Impact" description="Updates from Muft Development Foundation. We are new, and this page will fill up as the work does." />
+      <PageMeta title="News & Impact" description="News, announcements and event updates from Muft Development Foundation, a registered UK charity." />
       <PageHero eyebrow="News & Impact" title="Stories & updates"
-        sub="An honest page. There is not much here yet, and we would rather leave it thin than pad it out." />
+        sub="Announcements, events, and reports on the work as it happens. We only post what has actually happened." />
 
       <section className="section">
         <div className="wrap">
           <div className="card" style={{ background: 'var(--ivory)', marginBottom: 26, borderColor: 'var(--hair)' }}>
-            <strong style={{ color: 'var(--emerald)', fontFamily: 'var(--serif)', fontSize: 20 }}>Nothing has happened yet.</strong>
+            <strong style={{ color: 'var(--emerald)', fontFamily: 'var(--serif)', fontSize: 20 }}>What you will find here</strong>
             <p style={{ color: 'var(--slate)', margin: '8px 0 0' }}>
-              We registered in May 2026. When the first project is funded and delivered, the report on it will
-              appear here, including what it cost and what it did not achieve. Leave your email if you want to
-              read that when it comes.
+              When a project is funded and delivered, the report on it appears here, including what it cost
+              and what it did not achieve. Conferences and gatherings are listed under{' '}
+              <Link to="/events">Events</Link>. Leave your email below to hear when something new is posted.
             </p>
           </div>
 
