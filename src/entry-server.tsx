@@ -4,6 +4,7 @@ import { HelmetProvider, type HelmetServerState } from 'react-helmet-async'
 import App from './App'
 
 export { EVENTS } from './events'
+export { NEWS } from './news'
 
 export function render(url: string) {
   const helmetContext: { helmet?: HelmetServerState } = {}

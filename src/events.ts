@@ -32,7 +32,7 @@ export type SiteEvent = {
 }
 
 // Parsed into { data, html } at build time by the markdown plugin in vite.config.ts.
-type ContentFile = { data: Record<string, any>; html: string }
+export type ContentFile = { data: Record<string, any>; html: string }
 const files = import.meta.glob('../content/events/*.md', { import: 'default', eager: true }) as Record<string, ContentFile>
 
 function load(path: string, { data: d, html }: ContentFile): SiteEvent {
@@ -73,8 +73,9 @@ export const EVENTS: SiteEvent[] = Object.entries(files)
 /* Times are read as wall-clock values and compared against UTC, so they can be
  * an hour out during British Summer Time. That is close enough for deciding
  * when registration closes and when an event moves to "past". */
-function wallClock(s: string, endOfDay = false) {
-  const t = /^\d{4}-\d{2}-\d{2}$/.test(s) ? `${s}T${endOfDay ? '23:59' : '00:00'}` : s
+export function wallClock(s: string, endOfDay = false) {
+  // Keep just YYYY-MM-DDTHH:mm, dropping any seconds or offset the CMS adds.
+  const t = /^\d{4}-\d{2}-\d{2}$/.test(s) ? `${s}T${endOfDay ? '23:59' : '00:00'}` : s.slice(0, 16)
   return Date.parse(`${t}Z`)
 }
 

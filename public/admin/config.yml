@@ -1,0 +1,126 @@
+# Sveltia CMS configuration for /admin.
+# Each entry is a Markdown file in content/; publishing commits it to GitHub
+# and Vercel rebuilds the site. Field names must match src/events.ts and
+# src/news.ts, which read these files.
+
+backend:
+  name: github
+  repo: nooher/mdf-website # on Vercel, the build replaces this with the repository it was built from
+  branch: main
+  base_url: https://muftdevelopmentfoundation.org.uk
+  auth_endpoint: api/auth
+  auth_methods: [oauth]
+  commit_messages:
+    create: 'Add {{collection}} “{{slug}}” (via admin)'
+    update: 'Update {{collection}} “{{slug}}” (via admin)'
+    delete: 'Delete {{collection}} “{{slug}}” (via admin)'
+    uploadMedia: 'Upload “{{path}}” (via admin)'
+    deleteMedia: 'Delete “{{path}}” (via admin)'
+
+app_title: MDF website admin
+site_url: https://muftdevelopmentfoundation.org.uk
+logo:
+  src: /emblem.png
+
+media_folder: public/uploads
+public_folder: /uploads
+media_libraries:
+  default:
+    config:
+      max_file_size: 10000000
+      slugify_filename: true
+      # Phone photos are shrunk and converted before upload so pages stay fast.
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 1600
+          height: 1600
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: events
+    label: Events
+    label_singular: Event
+    description: Conferences and events. An event shows under “Upcoming” until it ends, then moves to “Past events” by itself.
+    folder: content/events
+    extension: md
+    format: frontmatter
+    media_folder: /public/uploads/events
+    public_folder: /uploads/events
+    preview_path: events/{{slug}}
+    summary: '{{title}} — {{start | date(''D MMM YYYY'')}}'
+    sortable_fields: [start, title]
+    fields:
+      - { name: title, label: Event name, widget: string }
+      - { name: theme, label: Theme, widget: string, required: false, hint: 'Short headline, e.g. “Raising Ethical Future Leaders”.' }
+      - { name: tagline, label: Tagline, widget: string, required: false, hint: 'Optional second line under the theme.' }
+      - { name: summary, label: Short summary, widget: text, hint: 'One or two sentences. Shown on event cards and when the link is shared on WhatsApp or Facebook.' }
+      - { name: start, label: Starts, widget: datetime, format: 'YYYY-MM-DDTHH:mm' }
+      - { name: end, label: Ends, widget: datetime, format: 'YYYY-MM-DDTHH:mm', required: false }
+      - { name: venue, label: Venue, widget: string, hint: 'Name of the place, or “Online”.' }
+      - { name: address, label: Address, widget: string, required: false }
+      - { name: price, label: Entry, widget: string, required: false, default: Free entry, hint: 'e.g. “Free entry” or “£10 per person”.' }
+      - name: registrationUrl
+        label: Registration form link
+        widget: string
+        required: false
+        pattern: ['^https://', 'Paste the full link, starting with https://']
+        hint: 'Paste the link to the Google Form (or Tally, Eventbrite…). Leave empty if people do not need to register.'
+      - { name: registrationCloses, label: Registration closes, widget: datetime, format: 'YYYY-MM-DDTHH:mm', required: false, hint: 'Leave empty to keep registration open until the event ends.' }
+      - { name: poster, label: Poster or picture, widget: image, required: false, choose_url: false }
+      - { name: posterAlt, label: Describe the poster, widget: string, required: false, hint: 'For blind visitors, e.g. “Poster for the conference on 28 November at London Central Mosque”.' }
+      - name: programmes
+        label: Pillars covered
+        widget: select
+        multiple: true
+        required: false
+        options:
+          - { label: Poverty Relief, value: poverty-relief }
+          - { label: Education, value: education }
+          - { label: Youth Development, value: youth-development }
+          - { label: Islamic Education, value: islamic-education }
+      - name: guests
+        label: Guests
+        label_singular: Guest
+        widget: list
+        required: false
+        summary: '{{fields.role}}: {{fields.name}}'
+        fields:
+          - { name: role, label: Role, widget: string, hint: 'e.g. Chief Guest, Guest of Honour, Speaker' }
+          - { name: name, label: Name, widget: string }
+          - { name: title, label: Position, widget: string, required: false }
+      - { name: guestsNote, label: Note under guests, widget: string, required: false }
+      - { name: contactName, label: Contact person, widget: string, required: false }
+      - { name: contactPhone, label: Contact phone, widget: string, required: false }
+      - { name: contactEmail, label: Contact email, widget: string, required: false }
+      - { name: body, label: Description, widget: markdown }
+
+  - name: news
+    label: News
+    label_singular: News post
+    description: News and updates. The newest post shows first on the News page.
+    folder: content/news
+    extension: md
+    format: frontmatter
+    media_folder: /public/uploads/news
+    public_folder: /uploads/news
+    preview_path: news/{{slug}}
+    summary: '{{title}} — {{date | date(''D MMM YYYY'')}}'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, type: date, format: 'YYYY-MM-DD', default: '{{now}}' }
+      - { name: summary, label: Short summary, widget: text, hint: 'One or two sentences. Shown on the News page and when the link is shared.' }
+      - { name: image, label: Picture, widget: image, required: false, choose_url: false }
+      - { name: imageAlt, label: Describe the picture, widget: string, required: false, hint: 'For blind visitors, e.g. “Volunteers packing food parcels”.' }
+      - name: link
+        label: Button link
+        widget: string
+        required: false
+        hint: 'Optional. A form or page to send readers to, e.g. a Google Form, or /events/… for an event on this site.'
+      - { name: linkLabel, label: Button text, widget: string, required: false, hint: 'e.g. “Register now”. Defaults to “Find out more”.' }
+      - { name: body, label: Full story, widget: markdown, required: false }

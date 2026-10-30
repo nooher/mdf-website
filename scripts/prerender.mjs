@@ -10,8 +10,8 @@ const root = path.resolve(__dirname, '..')
 const distDir = path.join(root, 'dist')
 const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js')
 
-// Fixed routes and their sitemap priority. Event pages are added from the
-// content files below, so publishing an event needs no change here.
+// Fixed routes and their sitemap priority. Event and news pages are added from
+// the content files below, so publishing through /admin needs no change here.
 const ROUTES = [
   ['/', '1.0'],
   ['/about', '0.8'],
@@ -34,8 +34,12 @@ const ROUTES = [
 ]
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8')
-const { render, EVENTS } = await import(pathToFileURL(ssrEntry).href)
-const routes = [...ROUTES, ...EVENTS.map(e => [`/events/${e.slug}`, '0.7'])]
+const { render, EVENTS, NEWS } = await import(pathToFileURL(ssrEntry).href)
+const routes = [
+  ...ROUTES,
+  ...EVENTS.map(e => [`/events/${e.slug}`, '0.7']),
+  ...NEWS.map(n => [`/news/${n.slug}`, '0.5']),
+]
 
 function headTagsFromHelmet(helmet) {
   return [
@@ -74,6 +78,17 @@ const sitemap = [
   '',
 ].join('\n')
 fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemap)
+
+// Point the /admin editor at the repository this deployment was built from, so
+// moving the repository to another GitHub account needs no edit to config.yml.
+const { VERCEL_GIT_REPO_OWNER: owner, VERCEL_GIT_REPO_SLUG: slug } = process.env
+if (owner && slug) {
+  const cmsConfig = path.join(distDir, 'admin', 'config.yml')
+  const yml = fs.readFileSync(cmsConfig, 'utf-8')
+  if (!/^  repo: .*$/m.test(yml)) throw new Error('admin/config.yml has no backend repo line to rewrite')
+  fs.writeFileSync(cmsConfig, yml.replace(/^  repo: .*$/m, `  repo: ${owner}/${slug}`))
+  console.log(`Admin editor points at ${owner}/${slug}.`)
+}
 
 fs.rmSync(path.join(root, 'dist-ssr'), { recursive: true, force: true })
 
