@@ -17,5 +17,5 @@ summary: |-
 image: /uploads/news/305309.webp
 imageAlt: Poster for Muft development foundation 31th October planning meeting
 link: ''
-linkLabel: Learn More
+linkLabel: Read more
 ---
