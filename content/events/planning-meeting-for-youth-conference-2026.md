@@ -18,10 +18,10 @@ guests:
     name: Hajjat Zahra Dattani
     title: Chairperson
   - role: Secretary and trustee
-    name: Mrs Moza All Abdallah
+    name: Mrs Moza Ali Abdallah
     title: Secretary
 guestsNote: ''
-contactName: Mrs Moza All Abdallah
+contactName: Mrs Moza Ali Abdallah
 contactPhone: +44 7550 085391
 contactEmail: info@muftdevelopmentfoundation.org.uk
 ---
